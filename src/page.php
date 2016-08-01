@@ -43,6 +43,11 @@ class Page extends HashMap
         return $this->verifyInt('0', $v);
     }
 
+    public function verify_1($v)
+    {
+        return $this->verifyInt('1', $v);
+    }
+
     public function verify_currentPage($v)
     {
         return $this->verifyInt('currentPage', $v);

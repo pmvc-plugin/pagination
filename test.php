@@ -61,9 +61,71 @@ class PaginationTest extends PHPUnit_Framework_TestCase
         $p->process();
      }
 
-     function testProcessByPage()
-     {
+    /**
+     * @dataProvider processByPageProvider
+     */
+     function testProcessByPage(
+        $num,
+        $total, 
+        $current,
+        $expectedTotalPage,
+        $expectedBegin,
+        $expectedEnd
+     ) {
+        $p = \PMVC\plug($this->_plug,[
+            PRE_PAGE_NUM=>$num,
+            TOTAL=>$total,
+            CURRENT_PAGE=>$current
+        ]);
+        $page = $p->process();
+        $this->assertEquals(
+            $expectedTotalPage,
+            $page[TOTAL_PAGE],
+            'Verify totalPage fail. '.print_r([
+                $page[TOTAL_PAGE],
+                func_get_args()
+            ],true)
+        );
+        $this->assertEquals(
+            $expectedBegin,
+            $page[BEGIN],
+            'Verify begin fail. '.print_r([
+                $page[BEGIN],
+                func_get_args()
+            ],true)
+        );
+        $this->assertEquals(
+            $expectedEnd,
+            $page[END],
+            'Verify end fail. '.print_r([
+                $page[END],
+                func_get_args()
+            ],true)
+        );
+     }
 
+     function processByPageProvider()
+     {
+        return [
+            [
+                /* num, total, current*/
+                1, 0, 0,
+                /*Expected totalPage, begin, end*/
+                1, 0, 0
+            ],
+            [
+                1, 1, 1,
+                1, 0, 0 
+            ],
+            [
+                1, 2, 2,
+                2, 1, 1 
+            ],
+            [
+                1, 2, 3,
+                2, 1, 1 
+            ]
+        ];
      }
 
     /**
