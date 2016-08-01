@@ -22,7 +22,6 @@ class Page extends HashMap
         return [
             BEGIN=>null,
             END=>null,
-            LIMIT=>null,
             PRE_PAGE_NUM=>null,
             TOTAL=>null,
             TOTAL_PAGE=>null,
@@ -40,7 +39,7 @@ class Page extends HashMap
     public function verifyInt($k, $v)
     {
         if (!is_numeric($v)) {
-            throw new OutOfRangeException('Value is not int');
+            throw new OutOfRangeException('Value is not int. ['.$k.'=>'.$v.']');
         }
         if ($v < 0) {
             $v = 0;
@@ -75,5 +74,15 @@ class Page extends HashMap
             throw new InvalidArgumentException('Invalid key. ['.$k.']');
         }
         return parent::offsetSet($k, $v);
+    }
+
+    public function getLimit()
+    {
+        $limit = 'LIMIT %d,%d';
+        return sprintf(
+            $limit,
+            $this[BEGIN],
+            $this[PRE_PAGE_NUM]
+        );
     }
 }

@@ -10,7 +10,6 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\pagination';
 
 const BEGIN = '0';
 const END = '1';
-const LIMIT = 'limit';
 const PRE_PAGE_NUM = 'perPageNum';
 const TOTAL = 'total';
 const TOTAL_PAGE = 'totalPage';
@@ -61,21 +60,15 @@ class pagination extends \PMVC\PlugIn
         } elseif (isset($this[CURRENT_PAGE])) {
             $page[TYPE] = 'page';
         } else {
-            throw new LogicException('Need set current page or begin.');
+            $page[CURRENT_PAGE] = 1;
+            $page[TYPE] = 'page';
         }
-        $this->calBegin($page);
-        $limit = 'LIMIT %d,%d';
-        $page[LIMIT] = sprintf(
-            $limit,
-            $page[BEGIN],
-            $page[PRE_PAGE_NUM]
-        );
-        return $page;
+        return $this->calBegin($page);
     }
 
     public function calBegin(Page $page)
     {
-        $page[TOTAL_PAGE] = $page[TOTAL] / $page[PRE_PAGE_NUM];
+        $page[TOTAL_PAGE] = ceil($page[TOTAL] / $page[PRE_PAGE_NUM]);
         if (empty($page[TOTAL_PAGE])) {
             $page[TOTAL_PAGE] = 1;
         }
@@ -85,8 +78,10 @@ class pagination extends \PMVC\PlugIn
         if ($page[CURRENT_PAGE] > $page[TOTAL_PAGE]) {
             $page[CURRENT_PAGE] = $page[TOTAL_PAGE];
         }
-        $page[BEGIN] = ($page[CURRENT_PAGE] - 1 ) *
-            $page[PRE_PAGE_NUM];
+        if (empty($page[BEGIN])) {
+            $page[BEGIN] = ($page[CURRENT_PAGE] - 1 ) *
+                $page[PRE_PAGE_NUM];
+        }
         $page[END] = $page[BEGIN]+$page[PRE_PAGE_NUM]-1;
         if ($page[BEGIN] >= $page[TOTAL]) {
             $page[BEGIN] = $page[TOTAL]-1;
@@ -94,6 +89,7 @@ class pagination extends \PMVC\PlugIn
         if ($page[END] >= $page[TOTAL]) {
             $page[END] = $page[TOTAL]-1;
         }
+        return $page;
     }
 
     /**
