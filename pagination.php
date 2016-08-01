@@ -2,6 +2,7 @@
 namespace PMVC\PlugIn\pagination;
 
 use LogicException;
+use ArrayAccess;
 
 \PMVC\l(__DIR__.'/src/page.php');
 
@@ -40,12 +41,15 @@ class pagination extends \PMVC\PlugIn
         }
     }
 
-    public function process(Page $page = null)
+    public function process(Page $page = null, ArrayAccess $copy = null)
     {
         if (is_null($page)) {
             $page = $this['page'];
         }
-        $this->sync($page);
+        if (is_null($copy)) {
+            $copy = $this;
+        }
+        $this->sync($page, $copy);
         if (empty($page[PRE_PAGE_NUM])) {
             throw new LogicException('Pre page number can\'t  set to empty.');
         }
@@ -81,11 +85,9 @@ class pagination extends \PMVC\PlugIn
         if ($page[CURRENT_PAGE] > $page[TOTAL_PAGE]) {
             $page[CURRENT_PAGE] = $page[TOTAL_PAGE];
         }
-        if (is_null($page[BEGIN])) {
-            $page[BEGIN] = ($page[CURRENT_PAGE] - 1 ) *
-                $page[PRE_PAGE_NUM];
-        }
-        $page[END] = $page[BEGIN]+$page[PRE_PAGE_NUM];
+        $page[BEGIN] = ($page[CURRENT_PAGE] - 1 ) *
+            $page[PRE_PAGE_NUM];
+        $page[END] = $page[BEGIN]+$page[PRE_PAGE_NUM]-1;
         if ($page[BEGIN] >= $page[TOTAL]) {
             $page[BEGIN] = $page[TOTAL]-1;
         }
@@ -138,7 +140,7 @@ class pagination extends \PMVC\PlugIn
         ];
     }
 
-    public function sync(Page $page)
+    public function sync(Page $page, ArrayAccess $copy)
     {
         $keys = [
             PRE_PAGE_NUM,
@@ -147,8 +149,10 @@ class pagination extends \PMVC\PlugIn
             BEGIN
         ];
         foreach($keys as $k){
-            if (isset($this[$k])) {
-                $page[$k] = $this[$k];
+            if (isset($copy[$k]) &&
+                !isset($page[$k])
+               ) {
+                $page[$k] = $copy[$k];
             }
         }
     }

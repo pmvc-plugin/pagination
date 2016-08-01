@@ -26,7 +26,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
     function testSync()
     {
         $p = \PMVC\plug($this->_plug, [BEGIN=>1, TOTAL=>2]);
-        $p->sync($p['page']);
+        $p->sync($p['page'], $p);
         $this->assertEquals($p[BEGIN], $p['page'][BEGIN]);
         $this->assertEquals($p[TOTAL], $p['page'][TOTAL]);
     }
@@ -186,5 +186,25 @@ class PaginationTest extends PHPUnit_Framework_TestCase
                 2,1,2
             ],
         ];
+    }
+    
+    public function testCalBegin()
+    {
+        $p = \PMVC\plug($this->_plug,[
+            PRE_PAGE_NUM=>2,
+            TOTAL=>6,
+            CURRENT_PAGE=>1
+        ]);
+        $page = $p->process();
+        $p->calNav($page);
+        $forward = new Page($page[FORWARD]);
+        $this->assertEquals(
+            2,
+            $forward[BEGIN]
+        );
+        $this->assertEquals(
+            3,
+            $forward[END]
+        );
     }
 }

@@ -7,6 +7,16 @@ use InvalidArgumentException;
 
 class Page extends HashMap
 {
+    public function __construct($currentPage=null)
+    {
+        parent::__construct();
+        if (!is_null($currentPage)) {
+            $this[CURRENT_PAGE] =  $currentPage;
+            $p = \PMVC\plug('pagination');
+            $p->process($this);
+        }
+    }
+
     protected function getInitialState()
     {
         return [
