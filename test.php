@@ -11,6 +11,11 @@ class PaginationTest extends PHPUnit_Framework_TestCase
 
     function setup()
     {
+        \PMVC\plug($this->_plug);
+    }
+
+    function teardown()
+    {
         \PMVC\unplug($this->_plug);
     }
 
@@ -145,7 +150,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
             CURRENT_PAGE=>$current
         ]);
         $page = $p->process();
-        $list = $p->genPageList($page, $listNum);
+        $list = $p->calPageList($page, $listNum);
         $this->assertEquals(
             $expectedListB,
             $list[BEGIN],
@@ -206,5 +211,44 @@ class PaginationTest extends PHPUnit_Framework_TestCase
             3,
             $forward[END]
         );
+    }
+
+    public function testGenPageList()
+    {
+        $p = \PMVC\plug($this->_plug,[
+            PRE_PAGE_NUM=>2,
+            TOTAL=>6,
+            BEGIN=>0
+        ]);
+        $p->process();
+        $pages = $p->genPageList(2);
+        $this->assertEquals([1,2,3],array_keys($pages['list']));
+        $this->assertEquals(1,$pages['list'][1][0][CURRENT_PAGE]);
+        $this->assertEquals(2,$pages['list'][2][CURRENT_PAGE]);
+        $this->assertEquals(3,$pages['list'][3][CURRENT_PAGE]);
+    }
+
+    public function testGenPageListHasFirstPage()
+    {
+        $p = \PMVC\plug($this->_plug,[
+            PRE_PAGE_NUM=>2,
+            TOTAL=>10,
+            BEGIN=>10
+        ]);
+        $p->process();
+        $pages = $p->genPageList(2);
+        $this->assertTrue(!empty($pages[FIRST_PAGE]));
+    }
+
+    public function testGenPageListHasLastPage()
+    {
+        $p = \PMVC\plug($this->_plug,[
+            PRE_PAGE_NUM=>2,
+            TOTAL=>10,
+            BEGIN=>0
+        ]);
+        $p->process();
+        $pages = $p->genPageList(2);
+        $this->assertTrue(!empty($pages[LAST_PAGE]));
     }
 }

@@ -4,16 +4,21 @@ namespace PMVC\PlugIn\pagination;
 use PMVC\HashMap;
 use InvalidArgumentException;
 
-
 class Page extends HashMap
 {
-    public function __construct($currentPage=null)
+    public function __construct($currentPage=null, $url=null)
     {
         parent::__construct();
         if (!is_null($currentPage)) {
             $this[CURRENT_PAGE] =  $currentPage;
             $p = \PMVC\plug('pagination');
-            $p->process($this);
+            $copyForm = clone $p['page'];
+            unset($copyForm[BEGIN]);
+            $p->process($this, $copyForm);
+            $this[TYPE] = $copyForm[TYPE];
+        }
+        if (!is_null($url)) {
+            $this[URL] = $url; 
         }
     }
 
@@ -27,12 +32,13 @@ class Page extends HashMap
             TOTAL_PAGE=>null,
             CURRENT_PAGE=>null,
             TYPE=>null,
+            URL=>null,
 
             //nav
             BACKWARD=>null,
             FORWARD=>null,
             FIRST_PAGE=>null,
-            LAST_PAGE=>null
+            LAST_PAGE=>null,
         ];
     }
 
@@ -59,7 +65,21 @@ class Page extends HashMap
 
     public function verify_currentPage($v)
     {
-        return $this->verifyInt('currentPage', $v);
+        return $this->verifyInt(CURRENT_PAGE, $v);
+    }
+
+    public function verify_url($v)
+    {
+        if (!is_object($v)) {
+            $pUrl = \PMVC\plug('url');
+            $v = $pUrl->getUrl($v);
+        }
+        if ('begin'===$this[TYPE]) {
+            $v->query['b'] = $this[BEGIN];
+        } else {
+            $v->query['page'] = $this[CURRENT_PAGE];
+        }
+        return parent::offsetSet(URL, $v);
     }
 
     public function offsetSet($k, $v)
