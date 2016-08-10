@@ -113,7 +113,7 @@ class pagination extends \PMVC\PlugIn
         if ($num < 2) {
             throw new LogicException('Page list number need greater than 2, You set to ['.$num.'].');
         }
-        $middle = ceil($num / 2);
+        $middle = floor($num / 2);
         $begin = $page[CURRENT_PAGE] - $middle;
         if ($num%2===0) {
             $begin++;
@@ -183,7 +183,9 @@ class pagination extends \PMVC\PlugIn
             }
         }
         ksort($pages);
-        $return['list'] = $pages;
+        foreach($pages as $p){
+            $return['list'][] = $p;
+        }
         return $return;
     }
 
