@@ -113,7 +113,7 @@ class pagination extends \PMVC\PlugIn
         if ($num < 2) {
             throw new LogicException('Page list number need greater than 2, You set to ['.$num.'].');
         }
-        $middle = floor($num / 2);
+        $middle = ceil($num / 2);
         $begin = $page[CURRENT_PAGE] - $middle;
         if ($num%2===0) {
             $begin++;
@@ -121,7 +121,7 @@ class pagination extends \PMVC\PlugIn
         if ($begin<=0) {
             $begin = 1;
         }
-        $end = $page[CURRENT_PAGE] + $middle;
+        $end = $begin + ($num-1);
         if ($end > $page[TOTAL_PAGE]) {
             $end = $page[TOTAL_PAGE];
         }
@@ -144,9 +144,9 @@ class pagination extends \PMVC\PlugIn
         }
         $this->calNav($page);
         $pages = [];
-        $return = [];
+        $return = [CURRENT_PAGE=>[$this->toArray($page)]];
         $current = (int)$page[CURRENT_PAGE];
-        $pages[$current] = [$this->toArray($page)];
+        $pages[$current] = CURRENT_PAGE;
         if ($num) {
             $liCount = $this->calPageList($page, $num);
             for($i=$liCount[BEGIN]; $i<=$liCount[END]; $i++){
@@ -166,10 +166,10 @@ class pagination extends \PMVC\PlugIn
             }
         }
         if (isset($page[FORWARD])) {
-            $pages[$current][FORWARD] = $this->toArray(new Page($page[FORWARD], $url));
+            $return[CURRENT_PAGE][FORWARD] = $this->toArray(new Page($page[FORWARD], $url));
         }
         if (isset($page[BACKWARD])) {
-            $pages[$current][BACKWARD] = $this->toArray(new Page($page[BACKWARD], $url));
+            $return[CURRENT_PAGE][BACKWARD] = $this->toArray(new Page($page[BACKWARD], $url));
         }
         if (!isset($pages[$page[LAST_PAGE]]) && !empty($page[LAST_PAGE])) {
             $lastPage = $this->toArray(new Page(
