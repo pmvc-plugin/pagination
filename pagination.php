@@ -197,6 +197,9 @@ class pagination extends \PMVC\PlugIn
                 unset($arrPage[$k]);
             }
         }
+        if (isset($arrPage[URL])) {
+            $arrPage[URL] = (string)$arrPage[URL];
+        }
         return $arrPage;
     }
 
