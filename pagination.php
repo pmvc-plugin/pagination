@@ -19,7 +19,11 @@ const FORWARD = 'forward';
 const LAST_PAGE = 'lastPage';
 const FIRST_PAGE = 'firstPage';
 const TYPE = 'type';
+
+#url
 const URL = 'url';
+const QUERY_B = 'b';
+const QUERY_PAGE = 'page';
 
 /**
  * @parameters int PRE_PAGE_NUM 
@@ -31,13 +35,21 @@ class pagination extends \PMVC\PlugIn
 {
     public function init()
     {
+        // page count
         $this['page'] = new Page();
         if (!isset($this[PRE_PAGE_NUM])) {
             $this[PRE_PAGE_NUM] = 10;
         }
-
         if (!isset($this[TOTAL])) {
             $this[TOTAL] = 0;
+        }
+
+        // url
+        if (!isset($this[QUERY_B])) {
+            $this[QUERY_B] = QUERY_B;
+        }
+        if (!isset($this[QUERY_PAGE])) {
+            $this[QUERY_PAGE] = QUERY_PAGE;
         }
     }
 

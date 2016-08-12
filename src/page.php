@@ -74,10 +74,15 @@ class Page extends HashMap
             $pUrl = \PMVC\plug('url');
             $v = $pUrl->getUrl($v);
         }
+        $p = \PMVC\plug('pagination');
         if ('begin'===$this[TYPE]) {
-            $v->query['b'] = $this[BEGIN];
+            if (!empty($this[BEGIN])) {
+                $v->query[$p[QUERY_B]] = $this[BEGIN];
+            }
         } else {
-            $v->query['page'] = $this[CURRENT_PAGE];
+            if (!empty($this[CURRENT_PAGE])) {
+                $v->query[$p[QUERY_PAGE]] = $this[CURRENT_PAGE];
+            }
         }
         return parent::offsetSet(URL, $v);
     }
