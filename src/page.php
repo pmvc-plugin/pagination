@@ -2,7 +2,6 @@
 namespace PMVC\PlugIn\pagination;
 
 use PMVC\HashMap;
-use InvalidArgumentException;
 
 class Page extends HashMap
 {
@@ -45,7 +44,7 @@ class Page extends HashMap
     public function verifyInt($k, $v)
     {
         if (!is_numeric($v)) {
-            throw new OutOfRangeException('Value is not int. ['.$k.'=>'.$v.']');
+            trigger_error('Value is not int. ['.$k.'=>'.$v.']');
         }
         if ($v < 0) {
             $v = 0;
@@ -96,7 +95,7 @@ class Page extends HashMap
             );
         }
         if (array_key_exists($k,$this)) {
-            throw new InvalidArgumentException('Invalid key. ['.$k.']');
+            trigger_error('Invalid key. ['.$k.']');
         }
         return parent::offsetSet($k, $v);
     }
