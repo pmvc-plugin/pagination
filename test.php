@@ -1,6 +1,10 @@
 <?php
+
 namespace PMVC\PlugIn\pagination;
+
 use PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_Error;
+use TypeError;
 
 \PMVC\Load::plug();
 \PMVC\addPlugInFolders(['../']);
