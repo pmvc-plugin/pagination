@@ -76,6 +76,24 @@ class PaginationTest extends PHPUnit_Framework_TestCase
      }
 
     /**
+     * @expectedException PHPUnit_Framework_Error 
+     */
+     function testAssignInvalidKeyToPage() 
+     {
+        try {
+            $page = new Page();
+            $page['foo'] = 'bar';
+        } catch (TypeError $e) {
+            throw new PHPUnit_Framework_Error(
+                $e->getMessage(),
+                0,
+                $e->getFile(),
+                $e->getLine()
+            );
+        }
+     }
+
+    /**
      * @dataProvider processByPageProvider
      */
      function testProcessByPage(

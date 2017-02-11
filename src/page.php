@@ -44,7 +44,7 @@ class Page extends HashMap
     public function verifyInt($k, $v)
     {
         if (!is_numeric($v)) {
-            trigger_error('Value is not int. ['.$k.'=>'.$v.']');
+            return !trigger_error('Value is not int. ['.$k.'=>'.$v.']');
         }
         if ($v < 0) {
             $v = 0;
@@ -94,8 +94,8 @@ class Page extends HashMap
                 $v
             );
         }
-        if (array_key_exists($k,$this)) {
-            trigger_error('Invalid key. ['.$k.']');
+        if (!array_key_exists($k, $this->state)) {
+            return !trigger_error('Invalid key. ['.$k.']');
         }
         return parent::offsetSet($k, $v);
     }

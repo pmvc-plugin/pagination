@@ -17,6 +17,9 @@ const BACKWARD = 'backward';
 const FORWARD = 'forward';
 const LAST_PAGE = 'lastPage';
 const FIRST_PAGE = 'firstPage';
+/**
+ * type: [begin|page]
+ */
 const TYPE = 'type';
 
 #url
