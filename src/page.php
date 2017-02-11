@@ -26,7 +26,7 @@ class Page extends HashMap
         return [
             BEGIN=>null,
             END=>null,
-            PRE_PAGE_NUM=>null,
+            PER_PAGE_NUM=>null,
             TOTAL=>null,
             TOTAL_PAGE=>null,
             CURRENT_PAGE=>null,
@@ -54,12 +54,12 @@ class Page extends HashMap
 
     public function verify_0($v)
     {
-        return $this->verifyInt('0', $v);
+        return $this->verifyInt(BEGIN, $v);
     }
 
     public function verify_1($v)
     {
-        return $this->verifyInt('1', $v);
+        return $this->verifyInt(END, $v);
     }
 
     public function verify_currentPage($v)
@@ -106,7 +106,7 @@ class Page extends HashMap
         return sprintf(
             $limit,
             $this[BEGIN],
-            $this[PRE_PAGE_NUM]
+            $this[PER_PAGE_NUM]
         );
     }
 }

@@ -56,14 +56,23 @@ class PaginationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException PHPUnit_Framework_Error 
      */
-     function testAssignEmptyPrePageNumber() 
+     function testAssignEmptyPerPageNumber() 
      {
-        $p = \PMVC\plug($this->_plug, [
-            PRE_PAGE_NUM=>0
-        ]);
-        $p->process();
+        try {
+            $p = \PMVC\plug($this->_plug, [
+                PER_PAGE_NUM=>0
+            ]);
+            $p->process();
+        } catch (TypeError $e) {
+            throw new PHPUnit_Framework_Error(
+                $e->getMessage(),
+                0,
+                $e->getFile(),
+                $e->getLine()
+            );
+        }
      }
 
     /**
@@ -78,7 +87,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
         $expectedEnd
      ) {
         $p = \PMVC\plug($this->_plug,[
-            PRE_PAGE_NUM=>$num,
+            PER_PAGE_NUM=>$num,
             TOTAL=>$total,
             CURRENT_PAGE=>$current
         ]);
@@ -145,7 +154,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
         $expectedListE 
     ) {
         $p = \PMVC\plug($this->_plug,[
-            PRE_PAGE_NUM=>$num,
+            PER_PAGE_NUM=>$num,
             TOTAL=>$total,
             CURRENT_PAGE=>$current
         ]);
@@ -196,7 +205,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
     public function testCalBegin()
     {
         $p = \PMVC\plug($this->_plug,[
-            PRE_PAGE_NUM=>2,
+            PER_PAGE_NUM=>2,
             TOTAL=>6,
             CURRENT_PAGE=>1
         ]);
@@ -216,7 +225,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
     public function testGenPageList()
     {
         $p = \PMVC\plug($this->_plug,[
-            PRE_PAGE_NUM=>2,
+            PER_PAGE_NUM=>2,
             TOTAL=>6,
             BEGIN=>0
         ]);
@@ -232,7 +241,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
     public function testGenPageListHasFirstPage()
     {
         $p = \PMVC\plug($this->_plug,[
-            PRE_PAGE_NUM=>2,
+            PER_PAGE_NUM=>2,
             TOTAL=>10,
             BEGIN=>10
         ]);
@@ -244,7 +253,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
     public function testGenPageListHasLastPage()
     {
         $p = \PMVC\plug($this->_plug,[
-            PRE_PAGE_NUM=>2,
+            PER_PAGE_NUM=>2,
             TOTAL=>10,
             BEGIN=>0
         ]);

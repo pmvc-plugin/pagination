@@ -7,7 +7,7 @@ use \PMVC\PlugIn\pagination as pg;
 $p = \PMVC\plug('pagination', [
     pg\TOTAL=>33,
     pg\BEGIN=>4,
-    pg\PRE_PAGE_NUM=>5
+    pg\PER_PAGE_NUM=>5
 ]);
 $page = $p->process();
 var_dump($page);

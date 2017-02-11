@@ -1,7 +1,6 @@
 <?php
 namespace PMVC\PlugIn\pagination;
 
-use LogicException;
 use ArrayAccess;
 
 \PMVC\l(__DIR__.'/src/page.php');
@@ -10,7 +9,7 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\pagination';
 
 const BEGIN = '0';
 const END = '1';
-const PRE_PAGE_NUM = 'perPageNum';
+const PER_PAGE_NUM = 'perPageNum';
 const TOTAL = 'total';
 const TOTAL_PAGE = 'totalPage';
 const CURRENT_PAGE = 'currentPage';
@@ -26,7 +25,7 @@ const QUERY_B = 'b';
 const QUERY_PAGE = 'page';
 
 /**
- * @parameters int PRE_PAGE_NUM 
+ * @parameters int PER_PAGE_NUM 
  * @parameters int TOTAL 
  * @parameters int CURRENT_PAGE 
  * @parameters int BEGIN 
@@ -37,8 +36,8 @@ class pagination extends \PMVC\PlugIn
     {
         // page count
         $this['page'] = new Page();
-        if (!isset($this[PRE_PAGE_NUM])) {
-            $this[PRE_PAGE_NUM] = 10;
+        if (!isset($this[PER_PAGE_NUM])) {
+            $this[PER_PAGE_NUM] = 10;
         }
         if (!isset($this[TOTAL])) {
             $this[TOTAL] = 0;
@@ -62,12 +61,12 @@ class pagination extends \PMVC\PlugIn
             $copyFrom = $this;
         }
         $this->sync($page, $copyFrom);
-        if (empty($page[PRE_PAGE_NUM])) {
-            throw new LogicException('Pre page number can\'t  set to empty.');
+        if (empty($page[PER_PAGE_NUM])) {
+            return !trigger_error('Per page number can\'t  set to empty.');
         }
         if (isset($page[BEGIN])) {
             $page[CURRENT_PAGE] = floor(
-                $page[BEGIN] / $page[PRE_PAGE_NUM]
+                $page[BEGIN] / $page[PER_PAGE_NUM]
             ) + 1;
             $page[TYPE] = 'begin';
         } elseif (isset($page[CURRENT_PAGE])) {
@@ -81,7 +80,7 @@ class pagination extends \PMVC\PlugIn
 
     public function calBegin(Page $page)
     {
-        $page[TOTAL_PAGE] = ceil($page[TOTAL] / $page[PRE_PAGE_NUM]);
+        $page[TOTAL_PAGE] = ceil($page[TOTAL] / $page[PER_PAGE_NUM]);
         if (empty($page[TOTAL_PAGE])) {
             $page[TOTAL_PAGE] = 1;
         }
@@ -93,9 +92,9 @@ class pagination extends \PMVC\PlugIn
         }
         if (empty($page[BEGIN])) {
             $page[BEGIN] = ($page[CURRENT_PAGE] - 1 ) *
-                $page[PRE_PAGE_NUM];
+                $page[PER_PAGE_NUM];
         }
-        $page[END] = $page[BEGIN]+$page[PRE_PAGE_NUM]-1;
+        $page[END] = $page[BEGIN]+$page[PER_PAGE_NUM]-1;
         if ($page[BEGIN] >= $page[TOTAL]) {
             $page[BEGIN] = $page[TOTAL]-1;
         }
@@ -123,7 +122,7 @@ class pagination extends \PMVC\PlugIn
     public function calPageList(Page $page, $num)
     {
         if ($num < 2) {
-            throw new LogicException('Page list number need greater than 2, You set to ['.$num.'].');
+            return !trigger_error('Page list number need greater than 2, You set to ['.$num.'].');
         }
         $middle = floor($num / 2);
         $begin = $page[CURRENT_PAGE] - $middle;
@@ -218,7 +217,7 @@ class pagination extends \PMVC\PlugIn
     public function sync(Page $page, ArrayAccess $copyFrom)
     {
         $keys = [
-            PRE_PAGE_NUM,
+            PER_PAGE_NUM,
             TOTAL,
             CURRENT_PAGE,
             BEGIN,
