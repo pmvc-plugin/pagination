@@ -55,6 +55,11 @@ class pagination extends \PMVC\PlugIn
         }
     }
 
+    public function getPage($currentPage=null, $url=null)
+    {
+        return new Page($currentPage, $url);
+    }
+
     public function process(Page $page = null, ArrayAccess $copyFrom = null)
     {
         if (is_null($page)) {
@@ -149,6 +154,19 @@ class pagination extends \PMVC\PlugIn
             BEGIN=>$begin,
             END=>$end
         ];
+    }
+
+    public function genPages(Page $page=null, $url=null)
+    {
+        if (is_null($page)) {
+            $page = $this['page'];
+        }
+        $num = $page[TOTAL_PAGE];
+        $pages = [];
+        for ($i=1; $i<=$num; $i++) {
+            $pages[$i] = $this->toArray(new Page($i, $url));
+        }
+        return $pages;
     }
 
     public function genPageList($num, Page $page=null, $url=null)
