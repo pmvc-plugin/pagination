@@ -69,18 +69,19 @@ class Page extends HashMap
 
     public function verify_url($v)
     {
-        if (!is_object($v)) {
-            $pUrl = \PMVC\plug('url');
-            $v = $pUrl->getUrl($v);
-        }
+        $v = \PMVC\plug('url')->getUrl($v);
         $p = \PMVC\plug('pagination');
         if ('begin'===$this[TYPE]) {
             if (!empty($this[BEGIN])) {
                 $v->query[$p[QUERY_B]] = $this[BEGIN];
+            } else {
+                unset($v->query[$p[QUERY_B]]);
             }
         } else {
             if (!empty($this[CURRENT_PAGE])) {
                 $v->query[$p[QUERY_PAGE]] = $this[CURRENT_PAGE];
+            } else {
+                unset($v->query[$p[QUERY_PAGE]]);
             }
         }
         return parent::offsetSet(URL, $v);
