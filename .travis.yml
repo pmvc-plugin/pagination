@@ -8,5 +8,7 @@ php:
 before_script:
   - composer self-update
   - composer install --prefer-source
+  - composer require phpunit/phpunit 4.8.35
  
-script: phpunit
+script:
+  - vendor/bin/phpunit
