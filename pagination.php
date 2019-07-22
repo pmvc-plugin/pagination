@@ -176,7 +176,7 @@ class pagination extends \PMVC\PlugIn
         }
         $this->calNav($page);
         $pages = [];
-        $return = [CURRENT_PAGE=>[$this->toArray($page)]];
+        $return = [CURRENT_PAGE=>$this->toArray($page)];
         $current = (int)$page[CURRENT_PAGE];
         $pages[$current] = CURRENT_PAGE;
         if ($num) {

@@ -255,7 +255,7 @@ class PaginationTest extends PHPUnit_Framework_TestCase
         $pages = $p->genPageList(2);
         $this->assertEquals([0,1,2],array_keys($pages['list']));
         $this->assertEquals(CURRENT_PAGE,$pages['list'][0]);
-        $this->assertEquals(1,$pages[CURRENT_PAGE][0][CURRENT_PAGE]);
+        $this->assertEquals(1,$pages[CURRENT_PAGE][CURRENT_PAGE]);
         $this->assertEquals(2,$pages['list'][1][CURRENT_PAGE]);
         $this->assertEquals(3,$pages['list'][2][CURRENT_PAGE]);
     }
