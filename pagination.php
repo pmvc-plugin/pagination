@@ -230,7 +230,7 @@ class pagination extends \PMVC\PlugIn
             }
         }
         if (isset($arrPage[URL])) {
-            $arrPage[URL] = (string)$arrPage[URL];
+            $arrPage[URL] = (string)$page[URL];
         }
         return $arrPage;
     }
